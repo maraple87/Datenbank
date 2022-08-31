@@ -1,0 +1,22 @@
+Verwendung von replace mit einem Parameter im where-Bereich mit in
+
+Hinweis: bei Transact-SQL heißt es replace und by Sybase str_replace!
+
+
+
+MS SQL Server Bsp:
+
+Declare @sql varchar(max)= ('
+Select * from …
+Where schluessel_grund_ende in (''' + replace(@ivw, ',', ''',''') + ''')
+');
+exec( @sql) at KOMMERZ_HST_ODBC64; 
+
+
+Sybase Bsp:
+
+select @strsql = "
+Select * from …
+Where schluessel_grund_ende in ('" + str_replace(@ivw, ',', ''',''') + "') "
+"
+exec( @strsql) 
