@@ -1,0 +1,3 @@
+Verbindung vom SQl Server Management Server über Verbindungsserver auf Sybase DB:
+
+select * from openquery([kommerz_hst_odbc64], 'select * from news2v_db_man03..bezug_zusatz where kundennummer = 21475804')
