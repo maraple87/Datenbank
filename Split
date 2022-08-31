@@ -1,0 +1,3 @@
+Aus 4.1 -> 41
+
+LEFT(ph.Contents,LEN(ph.Contents)-CHARINDEX(".",ph.Contents)) + RIGHT(ph.Contents,LEN(ph.Contents)-CHARINDEX(".",ph.Contents)) 
