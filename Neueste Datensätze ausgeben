@@ -1,0 +1,4 @@
+SELECT bz.kundennummer, bz.bezug_letzter_tag FROM dbo.bezug_zusatz bz
+where bz.kurztitel = 'SCH'
+and bz.bezug_letzter_tag = (select max( dbo.bezug_zusatz.bezug_letzter_tag) 
+from dbo.bezug_zusatz where bz.kundennummer = dbo.bezug_zusatz.kundennummer and dbo.bezug_zusatz.kurztitel = 'SCH')
