@@ -1,0 +1,48 @@
+('|' + replace(@Monat, ',', '|'  )  +'|' ) like '%|' + convert(varchar(2),lp.monat) + '|%'					
+and ('|' + replace(@Mandant, ',', '|'  )  +'|' ) like '%|' + fa.firma_nr + '|%'	
+      
+Bsp.:
+
+
+USE [HStProg]
+GO
+/****** Object:  StoredProcedure [dbo].[egecko_Lohnvergleichsliste]    
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Autor:		 <Plewik>
+-- Create date:  <05.11.2020>
+-- Beschreibung: <Lohnvergleichsliste für Egecko, mit ähnlichen Aufbau wie für Casymir>
+-- Exec:		 EXEC [HStProg].[dbo].[egecko_Lohnvergleichsliste] '2022', '1,2,3,4,5,6,7', '20'
+-- Anmerkung:    Wenn in Egecko in einem Bereich ein Gültig von Datum vorkommt, dann nur die Daten vom aktuellsten Datumswert verwenden (Dies in die where-Klausel überprüfen)
+
+-- =============================================
+ALTER PROCEDURE [dbo].[egecko_Lohnvergleichsliste]
+	-- Add the parameters for the stored procedure here
+
+			@Jahr					char(4) = 2022,
+			@Monat					varchar(100)  = '7',
+			@Mandant				varchar(100)  = '13'
+
+
+as
+
+
+BEGIN
+
+	SELECT	distinct ma."mitarbeiter_nr" , ma."name", ma.mitarbeiter_id, ma.person_id
+	into HStProg.dbo.egecko_tmp_lohnvergleichsliste_ma
+	FROM	[egec01].integris.lohnkonto lk
+			LEFT OUTER JOIN [egec01].integris.firma fa ON (lk.firma_id = fa.firma_id) 
+			LEFT OUTER JOIN [egec01].integris.lohnperiode lp ON (lk.zurperiode_nr = lp.lohnperiode_nr)
+			LEFT OUTER JOIN [egec01].integris.mitarbeiter ma ON (lk.mitarbeiter_id = ma.mitarbeiter_id) 
+	where	lp.jahr =  @Jahr 
+			and ('|' + replace(@Monat, ',', '|'  )  +'|' ) like '%|' + convert(varchar(2),lp.monat) + '|%'					
+			and ('|' + replace(@Mandant, ',', '|'  )  +'|' ) like '%|' + fa.firma_nr + '|%'
+			and ma.beschaeftigungsstatus_nr = 1		-- 1 = Beschäftigt
+			
+END
+
